@@ -1,0 +1,22 @@
+#RESTART
+WHOLEMOLECULES ENTITY0=1-180 # UNK1 UNK2
+
+COM         LABEL=c1    ATOMS=1-90   NOPBC   # UNK1 COM
+COM         LABEL=c2    ATOMS=91-180   NOPBC   # UNK2 COM
+FIXEDATOM   LABEL=gc    AT=6.37671,6.37671,4.50901                     # geometrical center of the box
+DISTANCE    LABEL=d0    ATOMS=c1,c2             NOPBC   # COMs distance MTD CV
+DISTANCE    LABEL=d1    ATOMS=21,53     NOPBC   # UNK1 C17 vs C39
+DISTANCE    LABEL=d2    ATOMS=111,143     NOPBC   # UNK2 C17 vs C39
+DISTANCE    LABEL=d3    ATOMS=gc,c1             NOPBC   # UNK1 COM and geo centre 
+DISTANCE    LABEL=d4    ATOMS=gc,c2             NOPBC   # UNK2 COM and geo centre
+
+MOVINGRESTRAINT ...
+
+ARG=d1,d2
+
+STEP0=0        AT0=4.0,4.0                KAPPA0=0,0                         # starting point
+STEP1=25000    AT1=4.0,4.0                KAPPA1=100,100                     # stretch
+
+... MOVINGRESTRAINT
+
+PRINT ARG=* STRIDE=500 FILE=colvar                                                 #print less

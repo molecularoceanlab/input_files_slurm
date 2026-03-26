@@ -1,0 +1,29 @@
+#RESTART
+
+WHOLEMOLECULES ENTITY0=1-180 # UNK1 UNK2
+#MOLINFO STRUCTURE=../../02_mineq/npt.gro
+
+COM         LABEL=c1    ATOMS=1-90  	# UNK1 COM
+COM         LABEL=c2    ATOMS=91-180  	# UNK2 COM
+DISTANCE    LABEL=d0	ATOMS=c1,c2				# COMs distance MTD CV
+DISTANCE    LABEL=d1    ATOMS=21,53     # UNK1 C17 vs C39
+DISTANCE    LABEL=d2    ATOMS=111,143     # UNK2 C17 vs C39
+
+metad: METAD ...
+
+    ARG=d0
+    SIGMA=0.05	    # 0.5*fluctuation ~ 1A
+    HEIGHT=0.5	    # standard ~0.1-1.0*kBT KJ/mol | ~0.02-1.20 d, ~1.0-2.0 a -> TAU??? | from rep0
+    PACE=500        # ~100-500 steps relax system before next hill add
+    BIASFACTOR=15   # barriers 20-30 KJ/mol need a bias factor of ~10-15 biol syst
+    TEMP=300	    # well-tempered
+    #GRID_MIN=0.1    # no IDEA
+    #GRID_MAX=25.0   # max min values cv, store hills in file, memory efficient ?
+
+...
+
+UPPER_WALLS ARG=d0 AT=0.8 KAPPA=500   EXP=2 EPS=1 OFFSET=0 LABEL=uwall0             # limits grid max
+LOWER_WALLS ARG=d1 AT=4.0 KAPPA=2250  EXP=2 EPS=1 OFFSET=0 LABEL=lwall1             # crystalline stretch
+LOWER_WALLS ARG=d2 AT=4.0 KAPPA=2250  EXP=2 EPS=1 OFFSET=0 LABEL=lwall2             # crystalline stretch
+
+PRINT ARG=* STRIDE=1000 FILE=colvar													#print less

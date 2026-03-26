@@ -1,0 +1,30 @@
+#RESTART
+WHOLEMOLECULES ENTITY0=1-180 # UNK1 UNK2
+
+COM         LABEL=c1    ATOMS=1-90   NOPBC   # UNK1 COM
+COM         LABEL=c2    ATOMS=91-180   NOPBC   # UNK2 COM
+FIXEDATOM   LABEL=gc    AT=4.29721,4.29721,3.03859                     # geometrical center of the box
+DISTANCE    LABEL=d0    ATOMS=c1,c2             NOPBC   # COMs distance MTD CV
+DISTANCE    LABEL=d1    ATOMS=21,53     NOPBC   # UNK1 C17 vs C39
+DISTANCE    LABEL=d2    ATOMS=111,143     NOPBC   # UNK2 C17 vs C39
+DISTANCE    LABEL=d3    ATOMS=gc,c1             NOPBC   # UNK1 COM and geo centre
+DISTANCE    LABEL=d4    ATOMS=gc,c2             NOPBC   # UNK2 COM and geo centre
+
+metad: METAD ...
+
+    ARG=d0
+    SIGMA=0.05	    # 0.5*fluctuation ~ 1A
+    HEIGHT=0.5	    # standard ~0.1-1.0*kBT KJ/mol | ~0.02-1.20 d, ~1.0-2.0 a -> TAU??? | from rep0
+    PACE=500        # ~100-500 steps relax system before next hill add
+    BIASFACTOR=15   # barriers 20-30 KJ/mol need a bias factor of ~10-15 biol syst
+    TEMP=300	    # well-tempered
+
+...
+
+UPPER_WALLS ARG=d0 AT=1.0 KAPPA=1000  EXP=2 EPS=1 OFFSET=0 LABEL=uwall0             # limits grid max
+UPPER_WALLS ARG=d3 AT=1.0 KAPPA=1000  EXP=2 EPS=1 OFFSET=0 LABEL=uwall3             # limits grid max
+UPPER_WALLS ARG=d4 AT=1.0 KAPPA=1000  EXP=2 EPS=1 OFFSET=0 LABEL=uwall4             # limits grid max
+LOWER_WALLS ARG=d1 AT=2.4 KAPPA=2250  EXP=2 EPS=1 OFFSET=0 LABEL=lwall1             # amorphous stretch
+LOWER_WALLS ARG=d2 AT=2.4 KAPPA=2250  EXP=2 EPS=1 OFFSET=0 LABEL=lwall2             # amorphous stretch
+
+PRINT ARG=* STRIDE=1    FILE=colvar													#print less

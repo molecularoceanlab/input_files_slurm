@@ -1,0 +1,1 @@
+../templates/prot_prep/get_index.sh
