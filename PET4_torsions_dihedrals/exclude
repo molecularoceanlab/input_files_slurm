@@ -1,0 +1,17 @@
+*png*
+*/*png*
+*/*/*png*
+
+0*/slurm
+
+2_md/2_heat_nvt/
+2_md/3_eq_npt/
+
+2_md/4_md/md_*/step06_md1_??.???
+#2_md/4_md/md_*/step06_md1_??.fit.xtc
+#2_md/4_md/md_*/step06_md1_??.start.pdb
+2_md/4_md/md_*/step06_md1_??.last.pdb
+2_md/4_md/md_*/*slurm
+2_md/4_md/md_*/step06_md1_*cpt
+2_md/4_md/md_*/step06_md1_??.mdout.mdp
+
