@@ -1,0 +1,31 @@
+#RESTART
+WHOLEMOLECULES ENTITY0=- # UNK1 UNK2
+
+COM         LABEL=c1    ATOMS=-	NOPBC   # UNK1 COM
+COM         LABEL=c2    ATOMS=-	NOPBC   # UNK2 COM
+FIXEDATOM	LABEL=gc	AT=,,			 	        # geometrical center of the box
+DISTANCE    LABEL=d0    ATOMS=c1,c2          	NOPBC   # COMs distance MTD CV
+DISTANCE    LABEL=d1    ATOMS=,  	NOPBC   # UNK1 C17 vs C39
+DISTANCE    LABEL=d2    ATOMS=,  	NOPBC   # UNK2 C17 vs C39
+DISTANCE    LABEL=d3    ATOMS=gc,c1			  	NOPBC   # UNK2 C17 vs C39
+DISTANCE    LABEL=d4    ATOMS=gc,c2			  	NOPBC   # UNK2 C17 vs C39
+
+MOVINGRESTRAINT ...
+
+ARG=d0,d1,d2,d3,d4
+
+STEP0=0        AT0=1.0,4.0,4.0,0.5,0.5    KAPPA0=0,0,0,0,0                   # starting point
+STEP1=25000    AT1=1.0,4.0,4.0,0.5,0.5    KAPPA1=100,0,0,100,100             # pulling towards center and each other (pulling reducing PBC)
+STEP2=50000    AT2=1.0,4.0,4.0,0.5,0.5    KAPPA2=500,0,0,500,500             # stabilizing
+STEP3=175000   AT3=1.0,4.0,4.0,0.5,0.5    KAPPA3=500,100,100,500,500         # start stretching
+STEP3=250000   AT3=1.0,4.0,4.0,0.5,0.5    KAPPA3=100,100,100,100,100         # reduce force restraints to equilibrate pressure or clushes
+STEP3=500000   AT3=1.0,4.0,4.0,0.5,0.5    KAPPA3=500,100,100,500,500         # stabilizing
+STEP3=1500000  AT3=1.0,4.0,4.0,0.5,0.5    KAPPA3=0,100,100,100,100           # stop pulling keep restraints to the center
+
+... MOVINGRESTRAINT
+
+#   UPPER_WALLS ARG=d3,d4	AT=2.0,2.0	KAPPA=100,100	 LABEL=uwall3,uwall4
+#   UPPER_WALLS ARG=d0,d3,d4	AT=1.0,2.0,2.0	KAPPA=100,100,100	 LABEL=uwall0,uwall3,uwall4 	#EXP=2,2,2 EPS=1,1,1 OFFSET=0,0,0  # 2mols com link, walls on the box to prevent pbc
+#   LOWER_WALLS ARG=d1,d2		AT=4.0,4.0		KAPPA=1000,1000		 LABEL=lwall1,lwall2	        #EXP=2,2   EPS=1,1   OFFSET=0,0    # UNK1 UNK2 crystalline stretch prevents ligand to wrap
+
+PRINT ARG=* STRIDE=10 FILE=colvar                                                 #print less
